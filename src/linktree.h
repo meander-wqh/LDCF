@@ -1,41 +1,33 @@
 #ifndef LINKTREE_H_
 #define LINKTREE_H_
 
+struct TreeNode{
+	TreeNode* Pt0 = nullptr;
+	TreeNode* Pt1 = nullptr;
+};
+
 class LinkTree{
 public:
-	CuckooFilter* cf_pt;
-	CuckooFilter* child0_pt;
-	CuckooFilter* child1_pt;
-	int num;
 	int level;
-	LinkTree(size_t single_table_length, size_t fingerprint_size, double single_capacity, curlevel){
-		cf_pt = new CuckooFilter(single_table_length, fingerprint_size, single_capacity, curlevel);
-		child0_pt = new CuckooFilter(single_table_length, fingerprint_size, single_capacity, curlevel+1);
-		child1_pt = new CuckooFilter(single_table_length, fingerprint_size, single_capacity, curlevel+1);
+	int num;
+	TreeNode* root;
+	LinkTree(){
+		level = 0;
 		num = 0;
-		level = curlevel;
+		root = new TreeNode();
 	}
-	~LinkTree(){
-		delete cf_pt;
-		cf_pt = NULL;
-		delete child0_pt;
-		tail_pt = NULL;
-		delete child1_pt;
-		tail_pt = NULL;
-	}
-	bool release(CuckooFilter* cf_release){
-		CuckooFilter* emptyCF = new (0, 0, 0, curlevel);
-		CuckooFilter* frontCF = cf_release->front;
-		if(frontCF == NULL){
-			this->cf_pt = emptyCF;
-		}else if (frontCF->_0_child == cf_release){{
-			frontCF->_0_child = emptyCF;
-		}else{
-			frontCF->_1_child = emptyCF;
+	//分裂，input:为分裂的节点路径
+	bool append(std::string path){
+		TreeNode* curNode = root;
+		for(int i=0;i<path.length();++i){
+			if(path[i] == '0'){
+				curNode = curNode->Pt0;
+			}else{
+				curNode = curNode->Pt1;
+			}
 		}
-		emptyCF->_0_child = cf_relase->_0_child;
-		emptyCF->_1_child = cf_relase->_1_child;
-		cf_release = NULL;
+		curNode->Pt0 = new TreeNode();
+		curNode->Pt1 = new TreeNode();
 		return true;
 	}
 };

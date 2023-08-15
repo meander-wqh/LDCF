@@ -6,6 +6,7 @@
 #include"linktree.h"
 #include<list>
 #include<math.h>
+#include<unordered_map>
 #include<iostream>
 
 
@@ -28,9 +29,12 @@ private:
 
 	Victim victim;
 
-	CuckooFilter* curCF;
-	CuckooFilter* child0CF; 
-	CuckooFilter* child1CF; 
+	std::unordered_map<uint32_t,CuckooFilter*> CFMap;
+
+	// CuckooFilter* curCF;
+	// CuckooFilter* child0CF; 
+	// CuckooFilter* child1CF; 
+
 
 public:
 
@@ -54,10 +58,12 @@ public:
 	bool remove(CuckooFilter* cf_remove);
 
 	//generate 2 bucket addresses
-	void generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length);
-	void generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length);
+	//缺少一个level参数
+	void generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length,int level);
+	void generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length,int level);
 	
 	bool GetPre(const char* item);
+	bool GetPre(const char* item,int curLevel);
 
 	//get info of DCF
 	int getFingerprintSize();

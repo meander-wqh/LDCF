@@ -31,7 +31,7 @@ LogarithmicDynamicCuckooFilter::LogarithmicDynamicCuckooFilter(const size_t item
 LogarithmicDynamicCuckooFilter::~LogarithmicDynamicCuckooFilter(){
 	delete curCF;
 	delete child0CF;
-	delete child1CF
+	delete child1CF;
 	delete cf_tree;
 }
 

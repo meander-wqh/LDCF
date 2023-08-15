@@ -41,8 +41,10 @@ public:
 	int counter;
 	CuckooFilter* _0_child;
 	CuckooFilter* _1_child;
+	// CuckooFilter* child0CF;
+	// CuckooFilter* child1CF;
 	CuckooFilter* front;
-	int level;
+	int level; //代表这个CF在第几个level
 
 	//construction and distruction function
 	CuckooFilter(const size_t single_table_length, const size_t fingerprint_size, const int capacity, int curlevel);
@@ -65,6 +67,8 @@ public:
 	//read from bucket & write into bucket
 	uint32_t read(const size_t index, const size_t pos);
 	void write(const size_t index, const size_t pos, const uint32_t fingerprint);
+
+	void EmptyFilter(int curlevel,int single_capacity);
 
 };
 

@@ -30,7 +30,7 @@ CuckooFilter::~CuckooFilter(){
 	delete front;
 }
 
-CuckooFilter::EmptyFilter(int curlevel){
+void CuckooFilter::EmptyFilter(int curlevel,int single_capacity){
 	fingerprint_size = 0l;
 	bits_per_bucket = 0;
 	bytes_per_bucket = 0;
