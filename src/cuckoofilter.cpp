@@ -1,33 +1,46 @@
 #include "cuckoofilter.h"
 
-CuckooFilter::CuckooFilter(const size_t table_length, const size_t fingerprint_bits, const int single_capacity, int curlevel){
-	fingerprint_size = fingerprint_bits - curlevel;
+CuckooFilter::CuckooFilter(const size_t table_length, size_t fingerprint_size, const int single_capacity, int curlevel){
+	exact_fingerprint_size = fingerprint_size - curlevel;
+	if(exact_fingerprint_size>0 && exact_fingerprint_size<=4){
+		this->fingerprint_size = 4;
+	}else if(exact_fingerprint_size>4 && exact_fingerprint_size<=8){
+		this->fingerprint_size = 8;
+	}else if(exact_fingerprint_size>8 && exact_fingerprint_size<=12){
+		this->fingerprint_size = 12;
+	}else if(exact_fingerprint_size>12 && exact_fingerprint_size<=16){
+		this->fingerprint_size = 16;
+	}else if(exact_fingerprint_size>16 && exact_fingerprint_size<=24){
+		this->fingerprint_size = 16;
+	}else if(exact_fingerprint_size>24 && exact_fingerprint_size<=32){
+		this->fingerprint_size = 16;
+	}else{
+		cout<<"fingerprint out of range!!!"<<endl;
+		this->fingerprint_size = 16;
+	}
+	
 	bits_per_bucket = fingerprint_size*4;
 	bytes_per_bucket = (fingerprint_size*4+7)>>3;
 	single_table_length = table_length;
-	counter = 0;
+	counter = 0;//记录总数
 	capacity = single_capacity;
 	is_full = false;
 	is_empty = true;
-	_0_child = NULL;
-	_1_child = NULL;
-	front = NULL;
 	level = curlevel;
-	mask = (1ULL << fingerprint_size) - 1;
+	mask = (1ULL << fingerprint_size) - 1;//fingerprint长度的全1串
 
 	bucket = new Bucket[single_table_length];
 	for(size_t i = 0; i<single_table_length; i++){
 		bucket[i].bit_array = new char[bytes_per_bucket];
 		memset(bucket[i].bit_array, 0, bytes_per_bucket);
 	}
-
 }
 
 CuckooFilter::~CuckooFilter(){
 	delete[] bucket;
-	delete _0_child;
-	delete _1_child;
-	delete front;
+	// delete _0_child;
+	// delete _1_child;
+	// delete front;
 }
 
 void CuckooFilter::EmptyFilter(int curlevel,int single_capacity){
@@ -39,9 +52,9 @@ void CuckooFilter::EmptyFilter(int curlevel,int single_capacity){
 	capacity = single_capacity;
 	is_full = false;
 	is_empty = true;
-	_0_child = NULL;
-	_1_child = NULL;
-	front = NULL;
+	// _0_child = NULL;
+	// _1_child = NULL;
+	// front = NULL;
 	level = curlevel;
 	mask = 0;
 
@@ -75,6 +88,29 @@ int CuckooFilter::insertItem(const char* item, Victim &victim){
 		}
 	}
 
+	return false;
+}
+
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim){
+	size_t alt_index;
+
+	for(size_t count = 0; count<MaxNumKicks; count++){
+		bool kickout = (count != 0);
+		//第一个kickout传入的是false
+		if(insertImpl(index, fingerprint, kickout, victim)){
+			return true;
+		}
+
+		if (kickout){
+			index = victim.index;
+			fingerprint = victim.fingerprint;
+			generateA(index, fingerprint, alt_index, single_table_length);
+			index = alt_index;
+		}else{
+			generateA(index, fingerprint, alt_index, single_table_length);
+			index = alt_index;
+		}
+	}
 	return false;
 }
 
@@ -132,7 +168,6 @@ bool CuckooFilter::deleteItem(const char* item){
 }
 
 
-
 bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim){
 	for(size_t pos = 0; pos<4; pos++){
 		if(read(index,pos) == 0){
@@ -152,6 +187,8 @@ bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, co
 		int j = rand()%4;
 		victim.index = index;
 		victim.fingerprint = read(index,j);
+
+		//4个位置随机写入一个
 		write(index,j, fingerprint);
 	}
 	return false;
@@ -221,8 +258,8 @@ uint32_t CuckooFilter::read(size_t index, size_t pos){
 
 	if(fingerprint_size <= 4){
 		p += (pos >> 1);
-		uint8_t bits_8 = *(uint8_t*)p;
-		if((pos & 1) == 0){
+		uint8_t bits_8 = *(uint8_t*)p;//这里即p有可能指向某个pos，pos为0，1，2为开头的8bit
+		if((pos & 1) == 0){//这个判断是判断是否为偶数，如果为偶数那么pos可能为0，可能为2
 			fingerprint = (bits_8>>4) & 0xf;
 		}else{
 			fingerprint = bits_8 & 0xf;
@@ -290,6 +327,7 @@ void CuckooFilter::write(size_t index, size_t pos, uint32_t fingerprint){
 		((uint32_t*) p)[pos] = fingerprint;
 	}
 }
+	
 
 
 

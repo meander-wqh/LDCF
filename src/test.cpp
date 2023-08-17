@@ -6,7 +6,6 @@
 #include <iomanip>
 #include <time.h>
 #include <vector>
-//#include "dynamiccuckoofilter.h"
 #include "compactedLDCF.h"
 
 using namespace std;
@@ -36,67 +35,68 @@ Metric test(const Config config, string *data){
 
 	Metric metric;
 	//DynamicCuckooFilter* dcf = new DynamicCuckooFilter(config.item_num, config.exp_FPR);
-	CompactedLogarithmicDynamicCuckooFilter* dcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
+	//CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
+	CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
+	size_t capacity = config.item_num;
+	size_t exp_block_num = 6;
+	uint64_t single_table_length = cldcf->upperpower2(capacity/4.0/exp_block_num);
 
 
 	//**********insert**********
 	metric.I_time = clock();
 	for(size_t i = 0; i<config.item_num; i++){
-		dcf->insertItem(data[i].c_str());
+		bool insertItem(int level, size_t index, uint32_t fingerprint, Victim &victim);
+		std::string  value = HashFunc::sha1(data[i].c_str());
+		uint64_t hv = *((uint64_t*) value.c_str());
+		size_t index = ((uint32_t) (hv >> 32)) % single_table_length;
+		uint32_t fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
+		fingerprint &= ((0x1ULL<<cldcf->getFingerprintSize())-1);
+		fingerprint += (fingerprint == 0);
+		
+		cldcf->insertItem(0, index, fingerprint);
 	}
 	metric.I_time = clock() - metric.I_time;
 	metric.I_time = metric.I_time/CLOCKS_PER_SEC;
 
-	metric.space_cost = dcf->size_in_mb();
+	//metric.space_cost = cldcf->size_in_mb();
 
-	//**********query**********
+	// //**********query**********
 
-	int false_positive_count = 0;
+	// int false_positive_count = 0;
 
-	metric.Q_time = clock();
-	for(size_t i = 0; i<config.item_num; i++){
-		if(dcf->queryItem(data[i].c_str()) == false){
-			cout << "Item not found" << endl;
-		};
-	}
-	metric.Q_time = clock() - metric.Q_time;
-	metric.Q_time = metric.Q_time/CLOCKS_PER_SEC;
+	// metric.Q_time = clock();
+	// for(size_t i = 0; i<config.item_num; i++){
+	// 	if(dcf->queryItem(data[i].c_str()) == false){
+	// 		cout << "Item not found" << endl;
+	// 	};
+	// }
+	// metric.Q_time = clock() - metric.Q_time;
+	// metric.Q_time = metric.Q_time/CLOCKS_PER_SEC;
 
-	//calculate false
-	for(size_t i = 0; i<config.item_num; i++){
-		char item[10] = {0};
-		sprintf(item, "%ld", i + 1000*1000);
-		if(dcf->queryItem(item)){
-			false_positive_count++;
-		}
-	}
-
-
-	metric.actual_FPR = (double)false_positive_count/config.item_num;
+	// //calculate false
+	// for(size_t i = 0; i<config.item_num; i++){
+	// 	char item[10] = {0};
+	// 	sprintf(item, "%ld", i + 1000*1000);
+	// 	if(dcf->queryItem(item)){
+	// 		false_positive_count++;
+	// 	}
+	// }
 
 
-	//**********delete**********
+	// metric.actual_FPR = (double)false_positive_count/config.item_num;
 
 
-	size_t count = 0;
-	metric.D_time = clock();
-	while(count < config.item_num){
-		dcf->deleteItem(data[count].c_str());
-		count += 1; //delete all the items
-	}
-	metric.D_time = clock() - metric.D_time;
-	metric.D_time = metric.D_time/CLOCKS_PER_SEC;
+	// //**********delete**********
 
 
-	// //**********compact**********
-
-	// int size_before = dcf->cf_list->num;
-	// dcf->compact();
-	// int size_after = dcf->cf_list->num;
-
-	// metric.actual_BBN = size_before;
-	// metric.C_rate = (double)(size_before-size_after)/size_before;
-	// metric.F_size = dcf->getFingerprintSize();
+	// size_t count = 0;
+	// metric.D_time = clock();
+	// while(count < config.item_num){
+	// 	dcf->deleteItem(data[count].c_str());
+	// 	count += 1; //delete all the items
+	// }
+	// metric.D_time = clock() - metric.D_time;
+	// metric.D_time = metric.D_time/CLOCKS_PER_SEC;
 
 	return metric;
 

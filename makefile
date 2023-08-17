@@ -9,7 +9,7 @@ hashfunction.o: src/hashfunction.cpp src/hashfunction.h
 cuckoofilter.o: src/cuckoofilter.cpp src/cuckoofilter.h
 	g++ -Wall -c src/cuckoofilter.cpp -lssl -lcrypto
 
-dynamiccuckoofilter.o: src/compactedLDCF.cpp src/cuckoofilter.h
+compactedLDCF.o: src/compactedLDCF.cpp src/compactedLDCF.h
 	g++ -Wall -c src/compactedLDCF.cpp -lssl -lcrypto
 
 test.o: src/test.cpp src/compactedLDCF.h

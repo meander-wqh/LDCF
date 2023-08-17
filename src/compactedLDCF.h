@@ -8,6 +8,7 @@
 #include<math.h>
 #include<unordered_map>
 #include<iostream>
+#include"uint.h"
 
 
 
@@ -24,21 +25,15 @@ private:
 	double false_positive;
 	double single_false_positive;
 
-	double fingerprint_size_double;
-	int fingerprint_size;
+	double fingerprint_size_double; //这个值是不会变的
+	int fingerprint_size; //这里的fingerprint_size是初始化的最长fingerprint_size,但各个子CF会根据自己的level相应减少
 
 	Victim victim;
 
-	std::unordered_map<uint32_t,CuckooFilter*> CFMap;
-
-	// CuckooFilter* curCF;
-	// CuckooFilter* child0CF; 
-	// CuckooFilter* child1CF; 
-
-
+	std::unordered_map<std::string,CuckooFilter*> CFMap;
 public:
 
-	//record the items inside DCF
+	//record the items inside LDCF
 	int counter;
 
 	// the link tree strutcture of building blocks CF1, CF2, ...
@@ -50,12 +45,15 @@ public:
 
 	//insert & query & delete functions
 	bool insertItem(const char* item);
-	CuckooFilter* getChild0CF(CuckooFilter* curCF);
-	CuckooFilter* getChild1CF(CuckooFilter* curCF);
-	bool queryItem(const char* item);
-	bool deleteItem(const char* item);
+	bool insertItem(int level, size_t index, uint32_t fingerprint);
+	// CuckooFilter* getChild0CF(CuckooFilter* curCF);
+	// CuckooFilter* getChild1CF(CuckooFilter* curCF);
+	// bool queryItem(const char* item);
+	// bool deleteItem(const char* item);
 
-	bool remove(CuckooFilter* cf_remove);
+	// bool failureHandle(Victim &victim);
+
+	// bool remove(CuckooFilter* cf_remove);
 
 	//generate 2 bucket addresses
 	//缺少一个level参数
@@ -67,12 +65,16 @@ public:
 
 	//get info of DCF
 	int getFingerprintSize();
-	float size_in_mb();
+	//float size_in_mb();
 
 	//extra function to make sure the table length is the power of 2
 	uint64_t upperpower2(uint64_t x);
 
-	void info();
+	//分裂函数
+	bool append(std::string CFId);
+	
+	//void info();
+	std::string uint32ToString(uint32_t number, size_t numBits);
 };
 
 

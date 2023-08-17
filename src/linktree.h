@@ -2,9 +2,12 @@
 #define LINKTREE_H_
 
 struct TreeNode{
-	TreeNode* Pt0 = nullptr;
-	TreeNode* Pt1 = nullptr;
+	TreeNode* Pt0;
+	TreeNode* Pt1;
+	TreeNode() :Pt0(nullptr), Pt1(nullptr) {}
 };
+
+
 
 class LinkTree{
 public:
@@ -29,6 +32,23 @@ public:
 		curNode->Pt0 = new TreeNode();
 		curNode->Pt1 = new TreeNode();
 		return true;
+	}
+	void releaseTree(TreeNode* root) {
+		if (root == nullptr) {
+			return;
+		}
+
+		// 递归释放左子树
+		releaseTree(root->Pt0);
+
+		// 递归释放右子树
+		releaseTree(root->Pt1);
+
+		// 释放当前节点
+		delete root;
+	}
+	~LinkTree(){
+		releaseTree(root);
 	}
 };
 
