@@ -46,11 +46,12 @@ public:
 	bool is_empty;
 	int counter;
 	int level; //代表这个CF在第几个level
+	std::string CFId; 
 
 	//construction and distruction function
 	// CuckooFilter(const size_t single_table_length, const size_t fingerprint_size, const int capacity, int curlevel);
 	//这里传入的是
-	CuckooFilter(const size_t single_table_length, size_t fingerprint_size, const int capacity, int curlevel);
+	CuckooFilter(std::string CFId,const size_t single_table_length, size_t fingerprint_size, const int capacity, int curlevel);
 	//拷贝构造
 	CuckooFilter(const CuckooFilter& CF):bucket(CF.bucket){
 		capacity = CF.capacity;

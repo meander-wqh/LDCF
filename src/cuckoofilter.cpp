@@ -1,6 +1,10 @@
 #include "cuckoofilter.h"
 
-CuckooFilter::CuckooFilter(const size_t table_length, size_t fingerprint_size, const int single_capacity, int curlevel){
+CuckooFilter::CuckooFilter(std::string CFId, const size_t table_length, size_t fingerprint_size, const int single_capacity, int curlevel){
+	std::cout<<"------new CuckooFilter------"<<std::endl;
+	std::cout<<"CFId: "  <<CFId<<std::endl;
+	std::cout<<"table_length: "  <<table_length<<std::endl;
+	std::cout<<"single_capacity: "  <<single_capacity<<std::endl;
 	exact_fingerprint_size = fingerprint_size - curlevel;
 	if(exact_fingerprint_size>0 && exact_fingerprint_size<=4){
 		this->fingerprint_size = 4;
@@ -18,6 +22,8 @@ CuckooFilter::CuckooFilter(const size_t table_length, size_t fingerprint_size, c
 		cout<<"fingerprint out of range!!!"<<endl;
 		this->fingerprint_size = 16;
 	}
+	std::cout<<"fingerprint_size: "  <<fingerprint_size<<std::endl;
+	std::cout<<"exact_fingerprint_size: "  <<exact_fingerprint_size<<std::endl;
 	
 	bits_per_bucket = fingerprint_size*4;
 	bytes_per_bucket = (fingerprint_size*4+7)>>3;
@@ -28,12 +34,15 @@ CuckooFilter::CuckooFilter(const size_t table_length, size_t fingerprint_size, c
 	is_empty = true;
 	level = curlevel;
 	mask = (1ULL << fingerprint_size) - 1;//fingerprint长度的全1串
+	this->CFId = CFId;
 
 	bucket = new Bucket[single_table_length];
 	for(size_t i = 0; i<single_table_length; i++){
 		bucket[i].bit_array = new char[bytes_per_bucket];
 		memset(bucket[i].bit_array, 0, bytes_per_bucket);
 	}
+
+	std::cout<<"------end------"<<std::endl;
 }
 
 CuckooFilter::~CuckooFilter(){
@@ -92,6 +101,7 @@ int CuckooFilter::insertItem(const char* item, Victim &victim){
 }
 
 bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim){
+	std::cout<<"bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)"<<std::endl;
 	size_t alt_index;
 
 	for(size_t count = 0; count<MaxNumKicks; count++){
@@ -136,6 +146,37 @@ bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, bool kickout, 
 	return false;
 }
 
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim){
+	std::cout<<"bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)"<<std::endl;
+	// std::cout<<index<<std::endl;
+	// std::cout<<fingerprint<<std::endl;
+	for(size_t pos = 0; pos<4; pos++){
+		if(read(index,pos) == 0){//>>>>>>>>>>>>>
+			write(index,pos,fingerprint);
+			counter++;
+			// std::cout<<"counter:"<<counter<<std::endl;
+			// std::cout<<"capacity:"<<capacity<<std::endl;
+			if(this->counter == capacity){
+				this->is_full = true;
+			}
+
+			if(this->counter > 0 ){
+				this->is_empty = false;
+			}
+			return true;
+		}
+	}
+	if(kickout){
+		int j = rand()%4;
+		victim.index = index;
+		victim.fingerprint = read(index,j);
+
+		//4个位置随机写入一个
+		write(index,j, fingerprint);
+	}
+	return false;
+}
+
 bool CuckooFilter::queryItem(const char* item){
 	size_t index, alt_index;
 	uint32_t fingerprint;
@@ -164,33 +205,6 @@ bool CuckooFilter::deleteItem(const char* item){
 		return true;
 	}
 
-	return false;
-}
-
-
-bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim){
-	for(size_t pos = 0; pos<4; pos++){
-		if(read(index,pos) == 0){
-			write(index,pos,fingerprint);
-			counter++;
-			if(this->counter == capacity){
-				this->is_full = true;
-			}
-
-			if(this->counter > 0 ){
-				this->is_empty = false;
-			}
-			return true;
-		}
-	}
-	if(kickout){
-		int j = rand()%4;
-		victim.index = index;
-		victim.fingerprint = read(index,j);
-
-		//4个位置随机写入一个
-		write(index,j, fingerprint);
-	}
 	return false;
 }
 
@@ -253,9 +267,11 @@ void CuckooFilter::generateA(size_t index, uint32_t fingerprint, size_t &alt_ind
 
 
 uint32_t CuckooFilter::read(size_t index, size_t pos){
-	const char* p = bucket[index].bit_array;
-	uint32_t fingerprint;
+	// std::cout<<index<<std::endl;
 
+	const char* p = bucket[index].bit_array;
+	//std::cout<<index<<std::endl;
+	uint32_t fingerprint;
 	if(fingerprint_size <= 4){
 		p += (pos >> 1);
 		uint8_t bits_8 = *(uint8_t*)p;//这里即p有可能指向某个pos，pos为0，1，2为开头的8bit

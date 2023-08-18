@@ -10,5 +10,6 @@
 // typedef unsigned long int uint32_t;
 // typedef unsigned long long int uint64_t;
 
+std::string uint32ToString(uint32_t number, size_t numBits);
 
 #endif /* UINT_H_ */

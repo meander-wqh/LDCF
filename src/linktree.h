@@ -1,5 +1,6 @@
 #ifndef LINKTREE_H_
 #define LINKTREE_H_
+#include"uint.h"
 
 struct TreeNode{
 	TreeNode* Pt0;
@@ -19,6 +20,21 @@ public:
 		num = 0;
 		root = new TreeNode();
 	}
+	int getLevel(uint32_t fingerprint,size_t exact_fingerprint_size){
+		TreeNode* curNode = root;
+		std::string sfingerprint = uint32ToString(fingerprint,exact_fingerprint_size);
+		int index = 0;
+		while(curNode != nullptr){
+			if(sfingerprint[index] == '0'){
+				curNode = curNode->Pt0;
+			}else{
+				curNode = curNode->Pt1;
+			}
+			++index;
+		}
+		return --index;
+	}
+
 	//分裂，input:为分裂的节点路径
 	bool append(std::string path){
 		TreeNode* curNode = root;

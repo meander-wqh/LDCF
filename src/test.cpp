@@ -45,15 +45,14 @@ Metric test(const Config config, string *data){
 	//**********insert**********
 	metric.I_time = clock();
 	for(size_t i = 0; i<config.item_num; i++){
-		bool insertItem(int level, size_t index, uint32_t fingerprint, Victim &victim);
 		std::string  value = HashFunc::sha1(data[i].c_str());
 		uint64_t hv = *((uint64_t*) value.c_str());
 		size_t index = ((uint32_t) (hv >> 32)) % single_table_length;
 		uint32_t fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
 		fingerprint &= ((0x1ULL<<cldcf->getFingerprintSize())-1);
 		fingerprint += (fingerprint == 0);
-		
-		cldcf->insertItem(0, index, fingerprint);
+		int level = cldcf->getlevel(fingerprint);
+		cldcf->insertItem(level, index, fingerprint);
 	}
 	metric.I_time = clock() - metric.I_time;
 	metric.I_time = metric.I_time/CLOCKS_PER_SEC;

@@ -8,7 +8,6 @@
 #include<math.h>
 #include<unordered_map>
 #include<iostream>
-#include"uint.h"
 
 
 
@@ -72,9 +71,11 @@ public:
 
 	//分裂函数
 	bool append(std::string CFId);
+
+	int getlevel(uint32_t fingerprint);
 	
 	//void info();
-	std::string uint32ToString(uint32_t number, size_t numBits);
+	//std::string uint32ToString(uint32_t number, size_t numBits);
 };
 
 
