@@ -1,0 +1,767 @@
+------new CompactedLDCF------
+total_capacity: 50
+single_table_length: 2
+single_capacity: 7
+false_positive: 0.0001
+single_false_positive: 1.40006e-05
+fingerprint_size: 16
+------end------
+------new CuckooFilter------
+CFId: 
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 16
+------end------
+data: 0
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 11310
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 1
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 47223
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 2
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 39219
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 3
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 55963
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 4
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 45030
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 5
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 7366
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 6
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 5364
+insertItem in:
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 7
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 7931
+insertItem in:
+CFId: is full
+------new CuckooFilter------
+CFId: 0
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 15
+------end------
+------new CuckooFilter------
+CFId: 1
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 15
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 8
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 11676
+insertItem in:0
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 9
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 58838
+insertItem in:1
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 10
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 45709
+insertItem in:1
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 11
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 52765
+insertItem in:1
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 12
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 60510
+insertItem in:1
+CFId:1 is full
+------new CuckooFilter------
+CFId: 10
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 14
+------end------
+------new CuckooFilter------
+CFId: 11
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 14
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 13
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 35010
+insertItem in:10
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 14
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 35175
+insertItem in:10
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 15
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 52409
+insertItem in:11
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 16
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 51130
+insertItem in:11
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 17
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 47222
+insertItem in:10
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 18
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 20136
+insertItem in:0
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 19
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 5921
+insertItem in:0
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 20
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 31090
+insertItem in:0
+CFId:0 is full
+------new CuckooFilter------
+CFId: 00
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 14
+------end------
+------new CuckooFilter------
+CFId: 01
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 14
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 21
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 32751
+insertItem in:01
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 22
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 28826
+insertItem in:01
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 23
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 19216
+insertItem in:01
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 24
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 24861
+insertItem in:01
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 25
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 39096
+insertItem in:10
+CFId:10 is full
+------new CuckooFilter------
+CFId: 100
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+------new CuckooFilter------
+CFId: 101
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 26
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 50903
+insertItem in:11
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 27
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 31171
+insertItem in:01
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 28
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 56333
+insertItem in:11
+CFId:11 is full
+------new CuckooFilter------
+CFId: 110
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+------new CuckooFilter------
+CFId: 111
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 29
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 40550
+insertItem in:100
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 30
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 64691
+insertItem in:111
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 31
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 60901
+insertItem in:111
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 32
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 32448
+insertItem in:01
+CFId:01 is full
+------new CuckooFilter------
+CFId: 010
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+------new CuckooFilter------
+CFId: 011
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 33
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 41325
+insertItem in:101
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 34
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 38521
+insertItem in:100
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 35
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 58389
+insertItem in:111
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 36
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 2045
+insertItem in:00
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 37
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 7514
+insertItem in:00
+CFId:00 is full
+------new CuckooFilter------
+CFId: 000
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+------new CuckooFilter------
+CFId: 001
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 13
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 38
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 47108
+insertItem in:101
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 39
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 18574
+insertItem in:010
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 40
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 40072
+insertItem in:100
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 41
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 17184
+insertItem in:010
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 42
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 53047
+insertItem in:110
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 43
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 33655
+insertItem in:100
+CFId:100 is full
+------new CuckooFilter------
+CFId: 1000
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 12
+------end------
+------new CuckooFilter------
+CFId: 1001
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 12
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 44
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 50246
+insertItem in:110
+CFId:110 is full
+------new CuckooFilter------
+CFId: 1100
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 12
+------end------
+------new CuckooFilter------
+CFId: 1101
+table_length: 2
+single_capacity: 7
+fingerprint_size: 16
+exact_fingerprint_size: 12
+------end------
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 45
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 36475
+insertItem in:1000
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 46
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 53396
+insertItem in:1101
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 47
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 57011
+insertItem in:1101
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 48
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 29544
+insertItem in:011
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+data: 49
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)
+fingerprint: 54727
+insertItem in:1101
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)
+insertItem success
+ItemCounter: 50
+CFnumber: 10
+data: 0
+CFId: 001
+fingerprint: 11310
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 0 in 001
+data: 1
+CFId: 101
+fingerprint: 47223
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 1 in 101
+data: 2
+CFId: 1001
+fingerprint: 39219
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:2 in 1001
+data: 3
+CFId: 1101
+fingerprint: 55963
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:3 in 1101
+data: 4
+CFId: 101
+fingerprint: 45030
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 4 in 101
+data: 5
+CFId: 000
+fingerprint: 7366
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:5 in 000
+data: 6
+CFId: 000
+fingerprint: 5364
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:6 in 000
+data: 7
+CFId: 000
+fingerprint: 7931
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:7 in 000
+data: 8
+CFId: 001
+fingerprint: 11676
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 8 in 001
+data: 9
+CFId: 111
+fingerprint: 58838
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 9 in 111
+data: 10
+CFId: 101
+fingerprint: 45709
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 10 in 101
+data: 11
+CFId: 1100
+fingerprint: 52765
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:11 in 1100
+data: 12
+CFId: 111
+fingerprint: 60510
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 12 in 111
+data: 13
+CFId: 1000
+fingerprint: 35010
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:13 in 1000
+data: 14
+CFId: 1000
+fingerprint: 35175
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:14 in 1000
+data: 15
+CFId: 1100
+fingerprint: 52409
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:15 in 1100
+data: 16
+CFId: 1100
+fingerprint: 51130
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:16 in 1100
+data: 17
+CFId: 101
+fingerprint: 47222
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 17 in 101
+data: 18
+CFId: 010
+fingerprint: 20136
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 18 in 010
+data: 19
+CFId: 000
+fingerprint: 5921
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:19 in 000
+data: 20
+CFId: 011
+fingerprint: 31090
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 20 in 011
+data: 21
+CFId: 011
+fingerprint: 32751
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 21 in 011
+data: 22
+CFId: 011
+fingerprint: 28826
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 22 in 011
+data: 23
+CFId: 010
+fingerprint: 19216
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 23 in 010
+data: 24
+CFId: 011
+fingerprint: 24861
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 24 in 011
+data: 25
+CFId: 1001
+fingerprint: 39096
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:25 in 1001
+data: 26
+CFId: 1100
+fingerprint: 50903
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:26 in 1100
+data: 27
+CFId: 011
+fingerprint: 31171
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Can't found Item: 27 in 011
+data: 28
+CFId: 1101
+fingerprint: 56333
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:28 in 1101
+data: 29
+CFId: 1001
+fingerprint: 40550
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:29 in 1001
+data: 30
+CFId: 111
+fingerprint: 64691
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:30 in 111
+data: 31
+CFId: 111
+fingerprint: 60901
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:31 in 111
+data: 32
+CFId: 011
+fingerprint: 32448
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:32 in 011
+data: 33
+CFId: 101
+fingerprint: 41325
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:33 in 101
+data: 34
+CFId: 1001
+fingerprint: 38521
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:34 in 1001
+data: 35
+CFId: 111
+fingerprint: 58389
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:35 in 111
+data: 36
+CFId: 000
+fingerprint: 2045
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:36 in 000
+data: 37
+CFId: 000
+fingerprint: 7514
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:37 in 000
+data: 38
+CFId: 101
+fingerprint: 47108
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:38 in 101
+data: 39
+CFId: 010
+fingerprint: 18574
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:39 in 010
+data: 40
+CFId: 1001
+fingerprint: 40072
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:40 in 1001
+data: 41
+CFId: 010
+fingerprint: 17184
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:41 in 010
+data: 42
+CFId: 1100
+fingerprint: 53047
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:42 in 1100
+data: 43
+CFId: 1000
+fingerprint: 33655
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:43 in 1000
+data: 44
+CFId: 1100
+fingerprint: 50246
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:44 in 1100
+data: 45
+CFId: 1000
+fingerprint: 36475
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:45 in 1000
+data: 46
+CFId: 1101
+fingerprint: 53396
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:46 in 1101
+data: 47
+CFId: 1101
+fingerprint: 57011
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:47 in 1101
+data: 48
+CFId: 011
+fingerprint: 29544
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:48 in 011
+data: 49
+CFId: 1101
+fingerprint: 54727
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)
+Found Item:49 in 1101
+false_positive:0
+found_count:35

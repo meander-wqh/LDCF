@@ -151,7 +151,7 @@ bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, co
 	// std::cout<<index<<std::endl;
 	// std::cout<<fingerprint<<std::endl;
 	for(size_t pos = 0; pos<4; pos++){
-		if(read(index,pos) == 0){//>>>>>>>>>>>>>
+		if(read(index,pos) == 0){
 			write(index,pos,fingerprint);
 			counter++;
 			// std::cout<<"counter:"<<counter<<std::endl;
@@ -255,10 +255,9 @@ void CuckooFilter::generateIF(const char* item, size_t &index, uint32_t &fingerp
 
 	index = ((uint32_t) (hv >> 32)) % single_table_length;
 	fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
-	fingerprint &= ((0x1ULL<<fingerprint_size)-1);
+	//fingerprint &= ((0x1ULL<<fingerprint_size)-1);
+	fingerprint &= ((0x1ULL<<exact_fingerprint_size)-1);
 	fingerprint += (fingerprint == 0);
-	fingerprint = fingerprint >> level;
-
 }
 
 void CuckooFilter::generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length){
@@ -310,6 +309,7 @@ uint32_t CuckooFilter::read(size_t index, size_t pos){
 	return fingerprint & mask;
 }
 
+//这里会对fingerprint做处理，满足本CF的fingerprint_size
 void CuckooFilter::write(size_t index, size_t pos, uint32_t fingerprint){
 	char* p = bucket[index].bit_array;
 

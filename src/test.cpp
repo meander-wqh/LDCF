@@ -38,51 +38,66 @@ Metric test(const Config config, string *data){
 	//CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
 	CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
 	size_t capacity = config.item_num;
-	size_t exp_block_num = 6;
+	size_t exp_block_num = 2;
 	uint64_t single_table_length = cldcf->upperpower2(capacity/4.0/exp_block_num);
 
 
 	//**********insert**********
 	metric.I_time = clock();
 	for(size_t i = 0; i<config.item_num; i++){
-		std::string  value = HashFunc::sha1(data[i].c_str());
-		uint64_t hv = *((uint64_t*) value.c_str());
-		size_t index = ((uint32_t) (hv >> 32)) % single_table_length;
-		uint32_t fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
-		fingerprint &= ((0x1ULL<<cldcf->getFingerprintSize())-1);
-		fingerprint += (fingerprint == 0);
-		int level = cldcf->getlevel(fingerprint);
-		cldcf->insertItem(level, index, fingerprint);
+		std::cout<<"data: "<<data[i]<<std::endl;
+		uint32_t fingerprint;
+		size_t index;
+		//由于要通过fingerprint找到对应的CFId，同时是通过SGX生成用来查找的，所以这里生成的fingerprint是完整的长度
+		std::string CFId = cldcf->getCFId(data[i].c_str(),fingerprint,index);
+		cldcf->insertItem(CFId, index, fingerprint);
 	}
+	std::cout<<"ItemCounter: "<<cldcf->counter<<std::endl;
+	std::cout<<"CFnumber: "<<cldcf->CFnumber<<std::endl;
 	metric.I_time = clock() - metric.I_time;
 	metric.I_time = metric.I_time/CLOCKS_PER_SEC;
 
 	//metric.space_cost = cldcf->size_in_mb();
 
-	// //**********query**********
+	//**********query**********
 
-	// int false_positive_count = 0;
+	int false_positive_count = 0;
+	int found_count = 0;
 
-	// metric.Q_time = clock();
-	// for(size_t i = 0; i<config.item_num; i++){
-	// 	if(dcf->queryItem(data[i].c_str()) == false){
-	// 		cout << "Item not found" << endl;
-	// 	};
-	// }
-	// metric.Q_time = clock() - metric.Q_time;
-	// metric.Q_time = metric.Q_time/CLOCKS_PER_SEC;
+	metric.Q_time = clock();
+	for(size_t i = 0; i<config.item_num; i++){
+		uint32_t fingerprint;
+		size_t index;
+		std::string CFId = cldcf->getCFId(data[i].c_str(),fingerprint,index);
+		std::cout<<"data: "<<data[i]<<std::endl;
+		std::cout<<"CFId: "<<CFId<<std::endl;
+		std::cout<<"fingerprint: "<<fingerprint<<std::endl;
+		if(cldcf->queryItem(CFId,data[i].c_str()) == false){
+			cout << "Can't found Item: "<<data[i]<<" in "<<CFId<< endl;
+		}else{
+			cout << "Found Item:" <<data[i] <<" in "<<CFId<< endl;
+			found_count++;
+		}
+	}
+	metric.Q_time = clock() - metric.Q_time;
+	metric.Q_time = metric.Q_time/CLOCKS_PER_SEC;
 
 	// //calculate false
 	// for(size_t i = 0; i<config.item_num; i++){
 	// 	char item[10] = {0};
 	// 	sprintf(item, "%ld", i + 1000*1000);
-	// 	if(dcf->queryItem(item)){
+	// 	uint32_t fingerprint;
+	// 	size_t index;
+	// 	std::string CFId = cldcf->getCFId((const char*)item,fingerprint,index);
+	// 	if(cldcf->queryItem(CFId,item)){
 	// 		false_positive_count++;
 	// 	}
 	// }
-
-
 	// metric.actual_FPR = (double)false_positive_count/config.item_num;
+
+	cout<<"false_positive:"<<false_positive_count/config.item_num<<endl;
+	cout<<"found_count:"<<found_count<<endl;
+
 
 
 	// //**********delete**********

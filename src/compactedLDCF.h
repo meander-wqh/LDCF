@@ -30,11 +30,14 @@ private:
 	Victim victim;
 
 	std::unordered_map<std::string,CuckooFilter*> CFMap;
+
 public:
 
 	//record the items inside LDCF
 	int counter;
-
+	//record the CFnumber inside LDCF
+	int CFnumber = 0;
+	
 	// the link tree strutcture of building blocks CF1, CF2, ...
 	LinkTree* cf_tree;
 
@@ -44,10 +47,11 @@ public:
 
 	//insert & query & delete functions
 	bool insertItem(const char* item);
-	bool insertItem(int level, size_t index, uint32_t fingerprint);
+	bool insertItem(std::string CFId, size_t index, uint32_t fingerprint);
 	// CuckooFilter* getChild0CF(CuckooFilter* curCF);
 	// CuckooFilter* getChild1CF(CuckooFilter* curCF);
-	// bool queryItem(const char* item);
+	//bool queryItem(const char* item);
+	bool queryItem(std::string CFId, const char* item);
 	// bool deleteItem(const char* item);
 
 	// bool failureHandle(Victim &victim);
@@ -72,7 +76,8 @@ public:
 	//分裂函数
 	bool append(std::string CFId);
 
-	int getlevel(uint32_t fingerprint);
+	std::string getCFId(const char* item, uint32_t& fingerprint,size_t& index);
+	std::string getCFId(uint32_t fingerprint);
 	
 	//void info();
 	//std::string uint32ToString(uint32_t number, size_t numBits);

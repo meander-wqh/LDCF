@@ -45,6 +45,7 @@ CompactedLogarithmicDynamicCuckooFilter::CompactedLogarithmicDynamicCuckooFilter
 	std::cout<<"------end------"<<std::endl;
 
 	CFMap[""] = new CuckooFilter("",single_table_length, fingerprint_size, single_capacity, 0);	
+	CFnumber++;
 }
 
 CompactedLogarithmicDynamicCuckooFilter::~CompactedLogarithmicDynamicCuckooFilter(){
@@ -56,12 +57,14 @@ CompactedLogarithmicDynamicCuckooFilter::~CompactedLogarithmicDynamicCuckooFilte
 
 
 //插入CF的层级，候选index，指纹, 层级代表id的位数，第0层为空字符串，第1层为"0"或者"1"
-bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint){
+bool CompactedLogarithmicDynamicCuckooFilter::insertItem(std::string CFId, size_t index, uint32_t fingerprint){
 	std::cout<<"bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index, uint32_t fingerprint)"<<std::endl;
-	std::cout<<"insertItemlevel:"<<level<<std::endl;
+	int level = CFId.length();
+	std::cout<<"fingerprint: "<<fingerprint<<endl;
+	std::cout<<"insertItem in:"<<CFId<<std::endl;
 	//这里传入的指纹长度是完整的，在插入的时候才会进行截取
-	uint32_t uCFId = fingerprint >> (fingerprint_size-level);
-	std::string CFId = uint32ToString(uCFId,level);
+	// uint32_t uCFId = fingerprint >> (fingerprint_size-level);
+	// std::string CFId = uint32ToString(uCFId,level);
 	if(CFMap.find(CFId) == CFMap.end()){
 		std::cout<<"cannot find CFId:"<<CFId<<std::endl;
 		return false;
@@ -82,17 +85,29 @@ bool CompactedLogarithmicDynamicCuckooFilter::insertItem(int level, size_t index
 	}else{
 		//错误处理：分裂
 		std::cout<<"handle failure"<<std::endl;
-		append(CFId);
-		//这里的victim的fingerprint可能是被裁切过的，只需要通过最高位判断放到那个CF中,这里已经没有CFMap[CFId]了，所以报段错误!!!
 		std::string next =  uint32ToString(victim.fingerprint >> (CFMap[CFId]->exact_fingerprint_size-1),1);
+		append(CFId);
 		CFId = CFId + next;
+		insertItem(CFId,victim.index,victim.fingerprint);
 		counter++;
 	}
 
 	return true;
 }
-int CompactedLogarithmicDynamicCuckooFilter::getlevel(uint32_t fingerprint){
-	return cf_tree->getLevel(fingerprint,fingerprint_size);
+std::string CompactedLogarithmicDynamicCuckooFilter::getCFId(const char* item, uint32_t& fingerprint, size_t& index){
+	std::string  value = HashFunc::sha1(item);
+	uint64_t hv = *((uint64_t*) value.c_str());
+	index = ((uint32_t) (hv >> 32)) % single_table_length;
+	fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
+	fingerprint &= ((0x1ULL<<fingerprint_size)-1);
+	fingerprint += (fingerprint == 0);
+
+	return cf_tree->getCFId(fingerprint,fingerprint_size);
+}
+
+
+std::string CompactedLogarithmicDynamicCuckooFilter::getCFId(uint32_t fingerprint){
+	return cf_tree->getCFId(fingerprint,fingerprint_size);
 }
 
 // std::string CompactedLogarithmicDynamicCuckooFilter::uint32ToString(uint32_t number, size_t numBits) {
@@ -101,8 +116,9 @@ int CompactedLogarithmicDynamicCuckooFilter::getlevel(uint32_t fingerprint){
 //     return binaryStr.substr(32 - numBits); // 截取有效位数部分
 // }
 
-//分裂append函数,改成先构造两个空的，然后再遍历老的再往里面填充bucket
+//分裂append函数,改成先构造两个空的，然后再遍历老的再往里面填充bucket,这里可能会有一些问题，导致分裂后一些元素找不到
 bool CompactedLogarithmicDynamicCuckooFilter::append(std::string CFId){
+	CFnumber++;
 	//cf_tree分裂
 	cf_tree->append(CFId);
 
@@ -150,8 +166,8 @@ bool CompactedLogarithmicDynamicCuckooFilter::append(std::string CFId){
 // 	size_t index, alt_index;
 // 	uint32_t fingerprint;
 
+
 // 	generateIF(item, index, fingerprint, fingerprint_size, single_table_length, level);
-// 	//这里得到的fingerprint已经是剪切过的
 // 	generateA(index, fingerprint, alt_index, single_table_length, level);
 
 // 	CuckooFilter* query_pt = cf_tree->cf_pt;
@@ -174,6 +190,11 @@ bool CompactedLogarithmicDynamicCuckooFilter::append(std::string CFId){
 // 	}
 // 	return false;
 // }
+
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item){
+	std::cout<<"bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)"<<std::endl;
+	return CFMap[CFId]->queryItem(item);
+}
 
 // bool CompactedLogarithmicDynamicCuckooFilter::deleteItem(const char* item){
 // 	size_t index, alt_index;

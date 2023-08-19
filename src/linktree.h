@@ -20,19 +20,21 @@ public:
 		num = 0;
 		root = new TreeNode();
 	}
-	int getLevel(uint32_t fingerprint,size_t exact_fingerprint_size){
+	std::string getCFId(uint32_t fingerprint,size_t exact_fingerprint_size){
+		std::string CFId = "";
 		TreeNode* curNode = root;
 		std::string sfingerprint = uint32ToString(fingerprint,exact_fingerprint_size);
 		int index = 0;
-		while(curNode != nullptr){
+		while(curNode->Pt0 != nullptr){
 			if(sfingerprint[index] == '0'){
 				curNode = curNode->Pt0;
 			}else{
 				curNode = curNode->Pt1;
 			}
+			CFId = CFId + sfingerprint[index];
 			++index;
 		}
-		return --index;
+		return CFId;
 	}
 
 	//分裂，input:为分裂的节点路径
