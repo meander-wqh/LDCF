@@ -6,6 +6,7 @@
 #include<iostream>
 #include"hashfunction.h"
 #include"bithack.h"
+#include"uint.h"
 
 #define MaxNumKicks 500
 

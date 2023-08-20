@@ -11,5 +11,6 @@
 // typedef unsigned long long int uint64_t;
 
 std::string uint32ToString(uint32_t number, size_t numBits);
+uint32_t StringToUint32(const std::string& binaryStr);
 
 #endif /* UINT_H_ */

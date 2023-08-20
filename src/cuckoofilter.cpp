@@ -1,27 +1,14 @@
 #include "cuckoofilter.h"
 
+
+//妥协：每个CF实际存储的还是同样长的，但是会通过exact_fingerprint_size记录当前CF的指纹实际长度
 CuckooFilter::CuckooFilter(std::string CFId, const size_t table_length, size_t fingerprint_size, const int single_capacity, int curlevel){
 	std::cout<<"------new CuckooFilter------"<<std::endl;
 	std::cout<<"CFId: "  <<CFId<<std::endl;
 	std::cout<<"table_length: "  <<table_length<<std::endl;
 	std::cout<<"single_capacity: "  <<single_capacity<<std::endl;
 	exact_fingerprint_size = fingerprint_size - curlevel;
-	if(exact_fingerprint_size>0 && exact_fingerprint_size<=4){
-		this->fingerprint_size = 4;
-	}else if(exact_fingerprint_size>4 && exact_fingerprint_size<=8){
-		this->fingerprint_size = 8;
-	}else if(exact_fingerprint_size>8 && exact_fingerprint_size<=12){
-		this->fingerprint_size = 12;
-	}else if(exact_fingerprint_size>12 && exact_fingerprint_size<=16){
-		this->fingerprint_size = 16;
-	}else if(exact_fingerprint_size>16 && exact_fingerprint_size<=24){
-		this->fingerprint_size = 16;
-	}else if(exact_fingerprint_size>24 && exact_fingerprint_size<=32){
-		this->fingerprint_size = 16;
-	}else{
-		cout<<"fingerprint out of range!!!"<<endl;
-		this->fingerprint_size = 16;
-	}
+	this->fingerprint_size = fingerprint_size;
 	std::cout<<"fingerprint_size: "  <<fingerprint_size<<std::endl;
 	std::cout<<"exact_fingerprint_size: "  <<exact_fingerprint_size<<std::endl;
 	
@@ -100,30 +87,6 @@ int CuckooFilter::insertItem(const char* item, Victim &victim){
 	return false;
 }
 
-bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim){
-	std::cout<<"bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)"<<std::endl;
-	size_t alt_index;
-
-	for(size_t count = 0; count<MaxNumKicks; count++){
-		bool kickout = (count != 0);
-		//第一个kickout传入的是false
-		if(insertImpl(index, fingerprint, kickout, victim)){
-			return true;
-		}
-
-		if (kickout){
-			index = victim.index;
-			fingerprint = victim.fingerprint;
-			generateA(index, fingerprint, alt_index, single_table_length);
-			index = alt_index;
-		}else{
-			generateA(index, fingerprint, alt_index, single_table_length);
-			index = alt_index;
-		}
-	}
-	return false;
-}
-
 bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, bool kickout, Victim &victim){
 	size_t alt_index;
 
@@ -146,12 +109,39 @@ bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, bool kickout, 
 	return false;
 }
 
+bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim){
+	std::cout<<"bool CuckooFilter::insertItem(size_t index, uint32_t fingerprint, Victim &victim)"<<std::endl;
+	size_t alt_index;
+	size_t count;
+	for(count = 0; count<MaxNumKicks; count++){
+		bool kickout = (count != 0);
+		//第一个kickout传入的是false
+		if(insertImpl(index, fingerprint, kickout, victim)){
+			// cout<<"count:"<<count<<endl;
+			return true;
+		}
+
+		if (kickout){
+			index = victim.index;
+			fingerprint = victim.fingerprint;
+			generateA(index, fingerprint, alt_index, single_table_length);
+			index = alt_index;
+		}else{
+			//如果不是kickout，那么选择另一个候选index
+			generateA(index, fingerprint, alt_index, single_table_length);
+			index = alt_index;
+		}
+	}
+	return false;
+}
+
 bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim){
-	std::cout<<"bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)"<<std::endl;
+	//std::cout<<"bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim)"<<std::endl;
 	// std::cout<<index<<std::endl;
 	// std::cout<<fingerprint<<std::endl;
 	for(size_t pos = 0; pos<4; pos++){
 		if(read(index,pos) == 0){
+			//cout<<"insertImpl success: "<<fingerprint<<endl;
 			write(index,pos,fingerprint);
 			counter++;
 			// std::cout<<"counter:"<<counter<<std::endl;
@@ -169,6 +159,7 @@ bool CuckooFilter::insertImpl(const size_t index, const uint32_t fingerprint, co
 	if(kickout){
 		int j = rand()%4;
 		victim.index = index;
+		//因为read取出的fingerprint可能是截取过的，那么需要进行补全
 		victim.fingerprint = read(index,j);
 
 		//4个位置随机写入一个
@@ -255,8 +246,7 @@ void CuckooFilter::generateIF(const char* item, size_t &index, uint32_t &fingerp
 
 	index = ((uint32_t) (hv >> 32)) % single_table_length;
 	fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
-	//fingerprint &= ((0x1ULL<<fingerprint_size)-1);
-	fingerprint &= ((0x1ULL<<exact_fingerprint_size)-1);
+	fingerprint &= ((0x1ULL<<fingerprint_size)-1);
 	fingerprint += (fingerprint == 0);
 }
 
@@ -295,6 +285,7 @@ uint32_t CuckooFilter::read(size_t index, size_t pos){
 		p += (pos<<1);
 		uint16_t bits_16 = *(uint16_t*)p;
 		fingerprint = bits_16 & 0xffff;
+		//cout<<"read fingerprint:"<<fingerprint<<endl;
 	}else if(fingerprint_size <= 24){
 		p += pos+(pos<<1);
 		uint32_t bits_32 = *(uint32_t*)p;

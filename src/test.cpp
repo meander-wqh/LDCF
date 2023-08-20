@@ -38,7 +38,7 @@ Metric test(const Config config, string *data){
 	//CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
 	CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
 	size_t capacity = config.item_num;
-	size_t exp_block_num = 2;
+	size_t exp_block_num = 6;
 	uint64_t single_table_length = cldcf->upperpower2(capacity/4.0/exp_block_num);
 
 
@@ -52,8 +52,6 @@ Metric test(const Config config, string *data){
 		std::string CFId = cldcf->getCFId(data[i].c_str(),fingerprint,index);
 		cldcf->insertItem(CFId, index, fingerprint);
 	}
-	std::cout<<"ItemCounter: "<<cldcf->counter<<std::endl;
-	std::cout<<"CFnumber: "<<cldcf->CFnumber<<std::endl;
 	metric.I_time = clock() - metric.I_time;
 	metric.I_time = metric.I_time/CLOCKS_PER_SEC;
 
@@ -82,21 +80,23 @@ Metric test(const Config config, string *data){
 	metric.Q_time = clock() - metric.Q_time;
 	metric.Q_time = metric.Q_time/CLOCKS_PER_SEC;
 
-	// //calculate false
-	// for(size_t i = 0; i<config.item_num; i++){
-	// 	char item[10] = {0};
-	// 	sprintf(item, "%ld", i + 1000*1000);
-	// 	uint32_t fingerprint;
-	// 	size_t index;
-	// 	std::string CFId = cldcf->getCFId((const char*)item,fingerprint,index);
-	// 	if(cldcf->queryItem(CFId,item)){
-	// 		false_positive_count++;
-	// 	}
-	// }
-	// metric.actual_FPR = (double)false_positive_count/config.item_num;
+	//calculate false
+	for(size_t i = 0; i<config.item_num; i++){
+		char item[10] = {0};
+		sprintf(item, "%ld", i + 1000*1000);
+		uint32_t fingerprint;
+		size_t index;
+		std::string CFId = cldcf->getCFId((const char*)item,fingerprint,index);
+		if(cldcf->queryItem(CFId,item)){
+			false_positive_count++;
+		}
+	}
+	metric.actual_FPR = (double)false_positive_count/config.item_num;
 
-	cout<<"false_positive:"<<false_positive_count/config.item_num<<endl;
+	std::cout<<"ItemCounter: "<<cldcf->counter<<std::endl;
 	cout<<"found_count:"<<found_count<<endl;
+	std::cout<<"CFnumber: "<<cldcf->CFnumber<<std::endl;
+	cout<<"false_positive:"<< (double)false_positive_count/config.item_num<<endl;
 
 
 
