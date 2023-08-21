@@ -1,3 +1,4 @@
-false positive = 0.0001
-item number = 100000
-input file path = ./input/input.txt
+false positive = 0.0005
+item number = 10000000
+input file path = ./input/input-1^7.txt
+exp_block_num = 6

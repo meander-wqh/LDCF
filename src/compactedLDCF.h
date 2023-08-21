@@ -42,7 +42,7 @@ public:
 	LinkTree* cf_tree;
 
 	//construction & distruction functions
-	CompactedLogarithmicDynamicCuckooFilter(const size_t capacity, const double false_positive, const size_t exp_block_num = 6);
+	CompactedLogarithmicDynamicCuckooFilter(const size_t capacity, const double false_positive, const size_t exp_block_num);
 	~CompactedLogarithmicDynamicCuckooFilter();
 
 	//insert & query & delete functions
@@ -52,7 +52,9 @@ public:
 	// CuckooFilter* getChild1CF(CuckooFilter* curCF);
 	//bool queryItem(const char* item);
 	bool queryItem(std::string CFId, const char* item);
-	// bool deleteItem(const char* item);
+	
+	//bool deleteItem(const char* item);
+	bool deleteItem(std::string CFId,size_t index, uint32_t fingerprint);
 
 	// bool failureHandle(Victim &victim);
 
@@ -60,15 +62,15 @@ public:
 
 	//generate 2 bucket addresses
 	//缺少一个level参数
-	void generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length,int level);
-	void generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length,int level);
+	void generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length);
+	void generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length);
 	
 	bool GetPre(const char* item);
 	bool GetPre(const char* item,int curLevel);
 
 	//get info of DCF
 	int getFingerprintSize();
-	//float size_in_mb();
+	float size_in_mb();
 
 	//extra function to make sure the table length is the power of 2
 	uint64_t upperpower2(uint64_t x);

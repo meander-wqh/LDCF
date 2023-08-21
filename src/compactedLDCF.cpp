@@ -10,11 +10,12 @@ CompactedLogarithmicDynamicCuckooFilter::CompactedLogarithmicDynamicCuckooFilter
 	
 	//exp_block_num是期望有多少个CF?
 	single_table_length = upperpower2(capacity/4.0/exp_block_num);
+	// cout<<exp_block_num<<endl;
+	// cout<<single_table_length<<endl;
 	single_capacity = single_table_length*0.9375*4;//s=6 1920 s=12 960 s=24 480 s=48 240 s=96 120
 
 	false_positive = fp;
 	single_false_positive = 1-pow(1.0-false_positive, ((double)single_capacity/capacity));
-
 	fingerprint_size_double = ceil(log(8.0/single_false_positive)/log(2));
 	if(fingerprint_size_double>0 && fingerprint_size_double<=4){
 		fingerprint_size = 4;
@@ -233,9 +234,27 @@ bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const 
 // 	return false;
 // }
 
+bool CompactedLogarithmicDynamicCuckooFilter::deleteItem(std::string CFId,size_t index, uint32_t fingerprint){
+	size_t alt_index;
+	generateA(index, fingerprint, alt_index, single_table_length);
+	CuckooFilter* delete_pt = CFMap[CFId];
+	if(delete_pt->queryImpl(index, fingerprint)){
+		if(delete_pt->deleteImpl(index, fingerprint)){
+			counter--;
+			return true;
+		}
+	}else if(delete_pt->queryImpl(alt_index, fingerprint)){
+		if(delete_pt->deleteImpl(alt_index ,fingerprint)){
+			counter--;
+			return true;
+		}
+	}
+	return false;
+}
 
 
-void CompactedLogarithmicDynamicCuckooFilter::generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length, int level){
+//生成index 和 fingerprint
+void CompactedLogarithmicDynamicCuckooFilter::generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length){
 	std::string  value = HashFunc::sha1(item);
 	uint64_t hv = *((uint64_t*) value.c_str());
 
@@ -245,7 +264,8 @@ void CompactedLogarithmicDynamicCuckooFilter::generateIF(const char* item, size_
 	fingerprint += (fingerprint == 0);
 }
 
-void CompactedLogarithmicDynamicCuckooFilter::generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length, int level){
+//生成alt_index
+void CompactedLogarithmicDynamicCuckooFilter::generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length){
 	alt_index = (index ^ (fingerprint * 0x5bd1e995)) % single_table_length;
 }
 
@@ -274,10 +294,14 @@ int CompactedLogarithmicDynamicCuckooFilter::getFingerprintSize(){
 	return fingerprint_size;
 }
 
-// //计算内存
-// float CompactedLogarithmicDynamicCuckooFilter::size_in_mb(){
-// 	return fingerprint_size * 4.0 * single_table_length * cf_list->num / 8 / 1024 / 1024;
-// }
+float CompactedLogarithmicDynamicCuckooFilter::size_in_mb(){
+	float b = 0.0;
+	for(auto it = CFMap.begin();it!=CFMap.end();++it){
+		b += (fingerprint_size-it->second->level)*4.0*single_table_length ;
+	}
+
+	return b / 8.0 / 1024 / 1024;
+}
 
 uint64_t CompactedLogarithmicDynamicCuckooFilter::upperpower2(uint64_t x) {
   x--;

@@ -14,6 +14,7 @@ typedef struct{
 	size_t item_num;
 	double exp_FPR;
 	string dataset_path;
+	size_t exp_block_num;
 }Config;
 
 
@@ -36,13 +37,15 @@ Metric test(const Config config, string *data){
 	Metric metric;
 	//DynamicCuckooFilter* dcf = new DynamicCuckooFilter(config.item_num, config.exp_FPR);
 	//CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
-	CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
+	CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR,config.exp_block_num);
 	size_t capacity = config.item_num;
-	size_t exp_block_num = 6;
+	size_t exp_block_num = config.exp_block_num;
+	metric.exp_BBN = config.exp_block_num; 
 	uint64_t single_table_length = cldcf->upperpower2(capacity/4.0/exp_block_num);
 
 
 	//**********insert**********
+	std::cout<<"**********insert**********"<<std::endl;
 	metric.I_time = clock();
 	for(size_t i = 0; i<config.item_num; i++){
 		std::cout<<"data: "<<data[i]<<std::endl;
@@ -55,10 +58,11 @@ Metric test(const Config config, string *data){
 	metric.I_time = clock() - metric.I_time;
 	metric.I_time = metric.I_time/CLOCKS_PER_SEC;
 
-	//metric.space_cost = cldcf->size_in_mb();
+	metric.space_cost = cldcf->size_in_mb();
 
 	//**********query**********
 
+	std::cout<<"**********query**********"<<std::endl;
 	int false_positive_count = 0;
 	int found_count = 0;
 
@@ -83,7 +87,7 @@ Metric test(const Config config, string *data){
 	//calculate false
 	for(size_t i = 0; i<config.item_num; i++){
 		char item[10] = {0};
-		sprintf(item, "%ld", i + 1000*1000);
+		sprintf(item, "%ld", i + 1000000);
 		uint32_t fingerprint;
 		size_t index;
 		std::string CFId = cldcf->getCFId((const char*)item,fingerprint,index);
@@ -96,21 +100,27 @@ Metric test(const Config config, string *data){
 	std::cout<<"ItemCounter: "<<cldcf->counter<<std::endl;
 	cout<<"found_count:"<<found_count<<endl;
 	std::cout<<"CFnumber: "<<cldcf->CFnumber<<std::endl;
+	metric.actual_BBN = cldcf->CFnumber;
 	cout<<"false_positive:"<< (double)false_positive_count/config.item_num<<endl;
 
 
 
-	// //**********delete**********
+	//**********delete**********
+
+	std::cout<<"**********delete**********"<<std::endl;
 
 
-	// size_t count = 0;
-	// metric.D_time = clock();
-	// while(count < config.item_num){
-	// 	dcf->deleteItem(data[count].c_str());
-	// 	count += 1; //delete all the items
-	// }
-	// metric.D_time = clock() - metric.D_time;
-	// metric.D_time = metric.D_time/CLOCKS_PER_SEC;
+	size_t count = 0;
+	metric.D_time = clock();
+	while(count < config.item_num){
+		uint32_t fingerprint;
+		size_t index;
+		std::string CFId = cldcf->getCFId(data[count].c_str(),fingerprint,index);
+		cldcf->deleteItem(CFId,index,fingerprint);
+		count += 1; //delete all the items
+	}
+	metric.D_time = clock() - metric.D_time;
+	metric.D_time = metric.D_time/CLOCKS_PER_SEC;
 
 	return metric;
 
@@ -153,7 +163,9 @@ Config Read_Config(const string path){
 	configuration.item_num = atof(Get_Value(config_buff).c_str());
 	getline(in_config, config_buff);
 	configuration.dataset_path = Get_Value(config_buff);
-
+	getline(in_config, config_buff);
+	configuration.exp_block_num = atoi(Get_Value(config_buff).c_str());
+	
 	return configuration;
 }
 
@@ -183,16 +195,16 @@ void Print_Info(Config config, Metric metric){
 
 	ofstream out("./result/result.txt");
 
-	out << setw(15) << "item_num" << setw(15) << "exp_FPR"
-		<< setw(15) << "actual_FPR" << setw(15) << "actual_BBN" << setw(15) << "F_size(bits)"
-		<< setw(15) << "space_cost(MB)"
-		<< setw(15) << "I_time(s)" << setw(15) << "Q_time(s)" << setw(15) << "D_time(s)" << setw(10) << "C_rate"
+	out << "item_num" << setw(20) << "exp_FPR"
+		<< setw(20) << "actual_FPR" << setw(20) << "actual_BBN" << setw(20) << "F_size(bits)"
+		<< setw(20) << "space_cost(MB)"
+		<< setw(20) << "I_time(s)" << setw(20) << "Q_time(s)" << setw(20) << "D_time(s)" << setw(20) << "C_rate"
 		<< endl;
 
-	out << setw(15) << config.item_num << setw(15) << config.exp_FPR
-		<< setw(15) << metric.actual_FPR << setw(15) << metric.actual_BBN << setw(15) << metric.F_size
-		<< setw(15) << metric.space_cost
-		<< setw(15) << metric.I_time << setw(15) << metric.Q_time << setw(15) << metric.D_time << setw(10) << metric.C_rate
+	out << config.item_num << setw(20) << config.exp_FPR
+		<< setw(20) << metric.actual_FPR << setw(20) << metric.actual_BBN << setw(20) << metric.F_size
+		<< setw(20) << metric.space_cost
+		<< setw(20) << metric.I_time << setw(20) << metric.Q_time << setw(20) << metric.D_time << setw(20) << metric.C_rate
 		<< endl;
 }
 
