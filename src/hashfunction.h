@@ -3,6 +3,9 @@
 
 #include<string>
 #include<openssl/evp.h>
+#include <openssl/sha.h>
+#include <string>
+#include <cstring>
 
 using namespace std;
 

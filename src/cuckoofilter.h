@@ -31,8 +31,6 @@ struct Bucket{
 	}
 };
 
-
-
 class CuckooFilter{
 public:
 	int capacity;
@@ -45,7 +43,7 @@ public:
 	Bucket* bucket;
 	bool is_full;
 	bool is_empty;
-	int counter;
+	int counter = 0;
 	int level; //代表这个CF在第几个level
 	std::string CFId; 
 
@@ -73,6 +71,7 @@ public:
 	bool insertItem(const size_t index, const uint32_t fingerprint, bool kickout, Victim &victim);
 	bool insertItem(const size_t index, const uint32_t fingerprint, Victim &victim);
 	bool queryItem(const char* item);
+	bool queryItem(const char* w,const char* id);
 	bool deleteItem(const char* item);
 
 	bool insertImpl(const size_t index, const uint32_t fingerprint, const bool kickout, Victim &victim);
@@ -81,6 +80,7 @@ public:
 
 	//generate two candidate bucket addresses
 	void generateIF(const char* item, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length);
+	void generateIF(const char* w, const char* id, size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length);
 	void generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length);
 
 	//read from bucket & write into bucket

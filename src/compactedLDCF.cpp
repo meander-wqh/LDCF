@@ -12,11 +12,12 @@ CompactedLogarithmicDynamicCuckooFilter::CompactedLogarithmicDynamicCuckooFilter
 	single_table_length = upperpower2(capacity/4.0/exp_block_num);
 	// cout<<exp_block_num<<endl;
 	// cout<<single_table_length<<endl;
-	single_capacity = single_table_length*0.9375*4;//s=6 1920 s=12 960 s=24 480 s=48 240 s=96 120
+	single_capacity = single_table_length*0.9375*4;//s=6 1920 s=12 960 s=24 480 s=48 240 s=96 120 利用率为95%
 
 	false_positive = fp;
 	single_false_positive = 1-pow(1.0-false_positive, ((double)single_capacity/capacity));
 	fingerprint_size_double = ceil(log(8.0/single_false_positive)/log(2));
+	cout<<"fingerprint_size_double:"<<fingerprint_size_double<<endl;
 	if(fingerprint_size_double>0 && fingerprint_size_double<=4){
 		fingerprint_size = 4;
 	}else if(fingerprint_size_double>4 && fingerprint_size_double<=8){
@@ -26,9 +27,9 @@ CompactedLogarithmicDynamicCuckooFilter::CompactedLogarithmicDynamicCuckooFilter
 	}else if(fingerprint_size_double>12 && fingerprint_size_double<=16){
 		fingerprint_size = 16;
 	}else if(fingerprint_size_double>16 && fingerprint_size_double<=24){
-		fingerprint_size = 16;
+		fingerprint_size = 32;
 	}else if(fingerprint_size_double>24 && fingerprint_size_double<=32){
-		fingerprint_size = 16;
+		fingerprint_size = 32;
 	}else{
 		cout<<"fingerprint out of range!!!"<<endl;
 		fingerprint_size = 16;
@@ -106,6 +107,49 @@ std::string CompactedLogarithmicDynamicCuckooFilter::getCFId(const char* item, u
 }
 
 
+std::string CompactedLogarithmicDynamicCuckooFilter::getCFId(const char* w,const char* id, uint32_t& fingerprint, size_t& index){
+	std::string sw = string(w,strlen(w));
+	std::string sid = string(id,strlen(id));
+	std::string sitem = sw+sid;
+	cout<<sitem.length()<<endl;
+
+	std::string value = HashFunc::sha1(sitem.c_str());
+	uint64_t hv = *((uint64_t*) value.c_str());
+	cout<<hv<<endl;
+	index = ((uint32_t) (hv >> 32)) % single_table_length;
+	cout<<single_table_length<<endl;
+	cout<<"index:"<<index<<endl;
+
+	uint32_t fingerprint1;
+	std::string value1 = HashFunc::sha1(w);
+	uint64_t hv1 = *((uint64_t*) value1.c_str());
+	fingerprint1 = (uint32_t) (hv1 & 0xFFFFFFFF);
+	fingerprint1 &= ((0x1ULL<<fingerprint_size)-1);
+	fingerprint1 += (fingerprint1 == 0);
+	fingerprint1 = fingerprint1<<(fingerprint_size/2);
+	cout<<"fingerprint1:"<<fingerprint1<<endl;
+
+	uint32_t fingerprint2;
+	// std::string value2 = HashFunc::sha1(id);
+	// uint64_t hv2 = *((uint64_t*) value2.c_str());
+	fingerprint2 = (uint32_t) (hv & 0xFFFFFFFF);
+	fingerprint2 &= ((0x1ULL<<(fingerprint_size/2))-1);//只保留后面一半
+	fingerprint2 += (fingerprint2 == 0);
+	cout<<"fingerprint2:"<<fingerprint2<<endl;
+
+	//cout<<"sum:"<<fingerprint1+fingerprint2<<endl;
+
+	fingerprint = fingerprint1+fingerprint2;
+
+	fingerprint &= ((0x1ULL<<fingerprint_size)-1); 
+	cout<<"fingerprint:"<<fingerprint<<endl;
+
+	return cf_tree->getCFId(fingerprint,fingerprint_size);
+}
+
+
+
+
 std::string CompactedLogarithmicDynamicCuckooFilter::getCFId(uint32_t fingerprint){
 	return cf_tree->getCFId(fingerprint,fingerprint_size);
 }
@@ -167,6 +211,7 @@ bool CompactedLogarithmicDynamicCuckooFilter::append(std::string CFId){
 	//删除CFMap中对应的老的map
 	auto it = CFMap.find(CFId);
 	if(it != CFMap.end()){
+		delete it->second;
 		CFMap.erase(it);
 	}
 	return true;
@@ -204,7 +249,12 @@ bool CompactedLogarithmicDynamicCuckooFilter::append(std::string CFId){
 bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item){
 	//std::cout<<"bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)"<<std::endl;
 	return CFMap[CFId]->queryItem(item);
-}
+}	
+
+bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* w,const char* id){
+	//std::cout<<"bool CompactedLogarithmicDynamicCuckooFilter::queryItem(std::string CFId, const char* item)"<<std::endl;
+	return CFMap[CFId]->queryItem(w,id);
+}	
 
 // bool CompactedLogarithmicDynamicCuckooFilter::deleteItem(const char* item){
 // 	size_t index, alt_index;
@@ -263,6 +313,17 @@ void CompactedLogarithmicDynamicCuckooFilter::generateIF(const char* item, size_
 	fingerprint &= ((0x1ULL<<fingerprint_size)-1);
 	fingerprint += (fingerprint == 0);
 }
+
+// //生成index 和 fingerprint
+// void CompactedLogarithmicDynamicCuckooFilter::generateIF(const char* w,const char* id ,size_t &index, uint32_t &fingerprint, int fingerprint_size, int single_table_length){
+// 	std::string value1 = HashFunc::sha1(w);
+// 	uint64_t hv1 = *((uint64_t*) value1.c_str());
+
+// 	index = ((uint32_t) (hv1 >> 32)) % single_table_length;
+// 	fingerprint = (uint32_t) (hv & 0xFFFFFFFF);
+// 	fingerprint &= ((0x1ULL<<fingerprint_size)-1);
+// 	fingerprint += (fingerprint == 0);
+// }
 
 //生成alt_index
 void CompactedLogarithmicDynamicCuckooFilter::generateA(size_t index, uint32_t fingerprint, size_t &alt_index, int single_table_length){

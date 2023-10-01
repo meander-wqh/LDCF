@@ -1,4 +1,4 @@
 false positive = 0.0005
-item number = 10000000
-input file path = ./input/input-1^7.txt
-exp_block_num = 6
+item number = 2000000
+input file path = ./input/com-orkut.ungraph-200w.txt
+exp_block_num = 200

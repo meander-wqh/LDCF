@@ -87,7 +87,7 @@ Metric test(const Config config, string *data){
 	//calculate false
 	for(size_t i = 0; i<config.item_num; i++){
 		char item[10] = {0};
-		sprintf(item, "%ld", i + 1000000);
+		sprintf(item, "%ld", i + 10000000);
 		uint32_t fingerprint;
 		size_t index;
 		std::string CFId = cldcf->getCFId((const char*)item,fingerprint,index);
@@ -191,6 +191,33 @@ string* Read_Dataset(const Config config, const string path){
 	return input_data;
 }
 
+vector<string> Read_Dataset2(const Config config, const char* path){
+	vector<string> Dataset;
+	std::ifstream file(path);
+	// std::ifstream file("./dataset/Gowalla");
+
+	// 检查文件是否成功打开
+    if (!file.is_open()) {
+        std::cerr << "无法打开文件" << std::endl;
+    }
+	std::string line;
+	while (std::getline(file, line)) {
+		std::istringstream iss(line);
+        std::string item;
+        std::vector<std::string> items;
+        while (iss >> item) {
+            items.push_back(item);
+        }
+		std::string sw = "fr:"+items[0];
+		std::string sid = items[1];
+
+		Dataset.push_back(sw);
+		Dataset.push_back(sid);
+	}
+
+	return Dataset;
+}
+
 void Print_Info(Config config, Metric metric){
 
 	ofstream out("./result/result.txt");
@@ -208,6 +235,120 @@ void Print_Info(Config config, Metric metric){
 		<< endl;
 }
 
+Metric test2(const Config config, vector<string> data){
+
+	Metric metric;
+	//DynamicCuckooFilter* dcf = new DynamicCuckooFilter(config.item_num, config.exp_FPR);
+	//CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR);
+	CompactedLogarithmicDynamicCuckooFilter* cldcf = new CompactedLogarithmicDynamicCuckooFilter(config.item_num, config.exp_FPR,config.exp_block_num);
+	size_t capacity = config.item_num;
+	size_t exp_block_num = config.exp_block_num;
+	metric.exp_BBN = config.exp_block_num; 
+	uint64_t single_table_length = cldcf->upperpower2(capacity/4.0/exp_block_num);
+
+	//**********insert**********
+	std::cout<<"**********insert**********"<<std::endl;
+	metric.I_time = clock();
+	for(size_t i = 0; i<config.item_num; i+=2){
+		std::cout<<"w: "<<data[i]<<std::endl;
+		std::cout<<"id: "<<data[i+1]<<std::endl;
+		uint32_t fingerprint;
+		size_t index;
+		//由于要通过fingerprint找到对应的CFId，同时是通过SGX生成用来查找的，所以这里生成的fingerprint是完整的长度
+		std::string CFId = cldcf->getCFId(data[i].c_str(),data[i+1].c_str(),fingerprint,index);
+	
+		cldcf->insertItem(CFId, index, fingerprint);
+	}
+	metric.I_time = clock() - metric.I_time;
+	metric.I_time = metric.I_time/CLOCKS_PER_SEC;
+
+	metric.space_cost = cldcf->size_in_mb();
+
+	// for(auto iter = cldcf->CFMap.begin();iter!=cldcf->CFMap.end();iter++){
+
+	// 	cout<<iter->first<<": "<<iter->second->counter<<endl;
+	// }
+
+	//**********query**********
+
+	std::cout<<"**********query**********"<<std::endl;
+	int false_positive_count = 0;
+	int found_count = 0;
+
+	metric.Q_time = clock();
+
+	vector<pair<string,string>> notfound;
+
+	for(size_t i = 0; i<config.item_num; i+=2){
+		std::cout<<"w: "<<data[i]<<std::endl;
+		std::cout<<"id: "<<data[i+1]<<std::endl;
+		uint32_t fingerprint;
+		size_t index;
+		std::string CFId = cldcf->getCFId(data[i].c_str(),data[i+1].c_str(),fingerprint,index);
+		// std::cout<<"CFId: "<<CFId<<std::endl;
+		if(cldcf->queryItem(CFId,data[i].c_str(),data[i+1].c_str()) == false){
+			cout << "Can't found Item: "<<data[i]<<" in "<<CFId<< endl;
+			notfound.push_back(make_pair(data[i],data[i+1]));
+		}else{
+			cout << "Found Item:" <<data[i] <<" in "<<CFId<< endl;
+			found_count++;
+		}
+	}
+	metric.Q_time = clock() - metric.Q_time;
+	metric.Q_time = metric.Q_time/CLOCKS_PER_SEC;
+
+
+	//calculate false
+	for(size_t i = config.item_num; i<config.item_num + config.item_num; i+=2){
+		uint32_t fingerprint;
+		size_t index;
+		std::string CFId = cldcf->getCFId(data[i].c_str(),data[i+1].c_str(),fingerprint,index);
+		std::cout<<"data: "<<data[i]+":"+data[i+1]<<std::endl;
+		if(cldcf->queryItem(CFId,data[i].c_str(),data[i+1].c_str())){
+			false_positive_count++;
+		}
+	}
+	metric.actual_FPR = (double)false_positive_count/config.item_num;
+
+	std::cout<<"ItemCounter: "<<cldcf->counter<<std::endl;
+	cout<<"found_count:"<<found_count<<endl;
+	std::cout<<"CFnumber: "<<cldcf->CFnumber<<std::endl;
+	metric.actual_BBN = cldcf->CFnumber;
+	cout<<"false_positive:"<< (double)false_positive_count/(config.item_num/2)<<endl;
+	cout<<"fingerprint_size:"<<cldcf->fingerprint_size<<endl;
+
+	cout<<endl;
+
+	for(int i=0;i<notfound.size();i++){
+		uint32_t fingerprint;
+		size_t index;
+		cout<<"data:"<<notfound[i].first<<":"<<notfound[i].second<<endl;
+		cldcf->getCFId(notfound[i].first.c_str(),notfound[i].second.c_str(),fingerprint,index);
+	}
+
+
+
+	// //**********delete**********
+
+	// std::cout<<"**********delete**********"<<std::endl;
+
+
+	// size_t count = 0;
+	// metric.D_time = clock();
+	// while(count < config.item_num){
+	// 	uint32_t fingerprint;
+	// 	size_t index;
+	// 	std::string CFId = cldcf->getCFId(data[count].c_str(),fingerprint,index);
+	// 	cldcf->deleteItem(CFId,index,fingerprint);
+	// 	count += 1; //delete all the items
+	// }
+	// metric.D_time = clock() - metric.D_time;
+	// metric.D_time = metric.D_time/CLOCKS_PER_SEC;
+
+	return metric;
+
+}
+
 
 
 
@@ -217,10 +358,10 @@ int main(int argc, char* argv[]){
 	Config config = Read_Config(config_path);
 
 	string dataset_path = config.dataset_path;
-	string *data = Read_Dataset(config, dataset_path);
+	vector<string> data = Read_Dataset2(config, dataset_path.c_str());
 
 
-    Metric metric = test(config, data);
+    Metric metric = test2(config, data);
 
     Print_Info(config, metric);
 

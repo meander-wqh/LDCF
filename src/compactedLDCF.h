@@ -24,14 +24,13 @@ private:
 	double false_positive;
 	double single_false_positive;
 
-	double fingerprint_size_double; //这个值是不会变的
-	int fingerprint_size; //这里的fingerprint_size是初始化的最长fingerprint_size,但各个子CF会根据自己的level相应减少
-
 	Victim victim;
 
+public:
 	std::unordered_map<std::string,CuckooFilter*> CFMap;
 
-public:
+	double fingerprint_size_double; //这个值是不会变的
+	int fingerprint_size; //这里的fingerprint_size是初始化的最长fingerprint_size,但各个子CF会根据自己的level相应减少
 
 	//record the items inside LDCF
 	int counter;
@@ -48,10 +47,12 @@ public:
 	//insert & query & delete functions
 	bool insertItem(const char* item);
 	bool insertItem(std::string CFId, size_t index, uint32_t fingerprint);
+	std::string getCFId(const char* w,const char* id, uint32_t& fingerprint, size_t& index);
 	// CuckooFilter* getChild0CF(CuckooFilter* curCF);
 	// CuckooFilter* getChild1CF(CuckooFilter* curCF);
 	//bool queryItem(const char* item);
 	bool queryItem(std::string CFId, const char* item);
+	bool queryItem(std::string CFId, const char* w,const char* id);
 	
 	//bool deleteItem(const char* item);
 	bool deleteItem(std::string CFId,size_t index, uint32_t fingerprint);
